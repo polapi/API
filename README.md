@@ -145,6 +145,7 @@ Output:
 #### `orders` - list of all your offers ####
 
 Input:
+
 - _(optional)_  **limit** : number of rows to show; if no specified, returns latest 50 orders
 
 Output:
@@ -203,6 +204,23 @@ Output:
 - **time** : commission date
 - **comment** : comment for operation (usually it is type of operation)
 
+
+#### `transactions` - history of account transactions ####
+
+Input:
+
+- _(optional)_  **market** : (e.g. BTC-USD) if set the result list would be limited to transactions with given currencies. Correct format is cryptoCurrencyShortcut-priceCurrencyShortcut. If parameter not set method returns all transactions ordered by date in descending order.
+
+Output:
+
+- **date** : date of transaction
+- **type** : ASK if you sold crypto, BID when you were buyer
+- **market** : pair of currencies of transaction
+- **amount** : amount of crypto sold/bought
+- **rate** : crypto rate used in specified trasnaction
+- **price** : total price paid in transaction
+
+
 ### Error codes ###
 
 <table>
@@ -222,5 +240,6 @@ Output:
 	<tr><td>505</td><td>Key has no permission for this action</td></tr>
 	<tr><td>506</td><td>Account locked. Please contact with customer service</td></tr>
 	<tr><td>509</td><td>The BIC/SWIFT is required for this currency</td></tr>
+    <tr><td>510</td><td>Invalid market name</td></tr>
 </table>
 
