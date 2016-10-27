@@ -8,6 +8,7 @@ https://bitbay.net/API/Trading/tradingApi.php
 
 Request must have **method** parameter, which calls proper operation. 
 Next parameter of each request is **moment** - it is current time in unix timestamp format.
+Even though the requested host is _bitbay.net_ responses contain cookies for _market.bitbay.pl_. That is how it is supposed to work, so there's no need to worry. 
 
 ### API Keys ###
 
@@ -78,7 +79,7 @@ function BitBay_Trading_Api($method, $params = array())
 
 ### API call rate limit  ###
 
-The rate limit is 1 req / second.
+The rate limit is 1 request / second.
 
 ###  API methods ###
 
@@ -189,23 +190,25 @@ Output:
 - **success** : if withdrawal succeeded
 - **error** :  if any
 
-#### `history` - history of all operations on user account ####
+#### `history` - history of all user's operations ####
 
 Input:
 
-- **currency** : name of the currency in which history will be displayed
-- **limit** : the limit for results
+- **currency** : Abbreviation of a currency name of which history will be displayed.
+- **limit** : Maximum number of returned history entries (notice that this time the argument is required). Usually limiting number of returned records makes sense when there's possibility to provide an offset. In this case it's not there, so better hurry up before your history will be unaccessable through API (because you'll have more transactions than maximum limit).
 
 Output:
 
+- **id** : some kind of id
 - **amount** : amount of currency in operation
-- **balance_after** : total balance after operation (does not contain substracted   locked balance)
-- **currency** : currency of operation
-- **time** : commission date
-- **comment** : comment for operation (usually it is type of operation)
+- **balance_after** : total balance after operation (does not contain substracted locked balance)
+- **currency** : abbreviation of a currency name i.e. same thing as you provided in request
+- **operation_type** : type of operation (e.g. "+currency_transaction"), possible types nobody bothered to list. 
+- **time** : operation date in format _yyyy-MM-dd HH:mm:ss_
+- **comment** : comment for operation (usually it is not type of operation, because there's seperate field for that)
 
 
-#### `transactions` - history of account transactions ####
+#### `transactions` - history of user's transactions ####
 
 Input:
 
@@ -213,13 +216,16 @@ Input:
 
 Output:
 
-- **date** : date of transaction
+- **date** : date of transaction - it's basically the same thing as in **history** endpoint **time** output, but this time it's called **date** 
 - **type** : ASK if you sold crypto, BID when you were buyer
 - **market** : pair of currencies of transaction
 - **amount** : amount of crypto sold/bought
-- **rate** : crypto rate used in specified trasnaction
+- **rate** : crypto rate used in specified transaction
 - **price** : total price paid in transaction
 
+Tips:
+
+Transactions endpoint won't return information about fees. So to get them you will have to match transaction endpoint calls with history calls. Good luck with that!
 
 ### Error codes ###
 
